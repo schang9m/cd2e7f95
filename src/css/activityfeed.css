@@ -2,11 +2,14 @@
   padding: 16px;
 }
 
+.call-container {
+  margin-bottom: 8px;
+}
+
 .call-item {
   display: flex;
   align-items: center;
   padding: 12px;
-  margin-bottom: 8px;
   border-radius: 8px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -16,6 +19,34 @@
 
 .call-item:hover {
   transform: translateY(-2px);
+}
+
+.call-details {
+  background-color: #f8f9fa;
+  margin-top: 1px;
+  padding: 16px;
+  border-radius: 0 0 8px 8px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.detail-row {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: bold;
+  width: 100px;
+  color: #666;
+}
+
+.detail-value {
+  flex: 1;
 }
 
 .call-direction {
