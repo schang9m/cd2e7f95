@@ -1,0 +1,81 @@
+.call-details {
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #eee;
+}
+
+.detail-row {
+  display: flex;
+  padding: 8px 0;
+  align-items: center;
+}
+
+.detail-label {
+  width: 100px;
+  color: #666;
+  font-weight: 500;
+}
+
+.detail-value {
+  flex: 1;
+}
+
+.repeated-calls {
+  margin-top: 24px;
+  border-top: 1px solid #eee;
+  width: 100%;
+  margin-left: -16px;
+  padding: 0 16px;
+  width: calc(100% + 32px);
+}
+
+.repeated-calls-header {
+  padding: 16px 0 12px 0;
+  font-weight: 600;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.repeated-calls .call-container {
+  margin: 0;
+}
+
+.repeated-calls .call-item {
+  padding: 8px 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-bottom: 1px solid #eee;
+  width: 100%;
+}
+
+.repeated-calls .call-item:last-child {
+  border-bottom: none;
+}
+
+.repeated-calls .call-item:hover {
+  background: none;
+}
+
+.repeated-calls .call-direction {
+  width: 24px;
+  min-width: 24px;
+}
+
+.repeated-calls .call-info {
+  flex: 1;
+  padding-right: 16px;
+}
+
+.repeated-calls .archive-button {
+  padding: 4px 12px;
+  font-size: 0.9em;
+  background: none;
+  border: 1px solid #007bff;
+  color: #007bff;
+}
+
+.repeated-calls .archive-button:hover {
+  background: #007bff;
+  color: white;
+} 

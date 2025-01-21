@@ -4,6 +4,7 @@ import { useFetchCalls } from '../../hooks/useFetchCalls';
 import { useFilteredCalls } from '../../hooks/useFilteredCalls';
 import { useSortedCalls } from '../../hooks/useSortedCalls';
 import '../../css/activityfeed.css';
+import CallItem from './CallItem.jsx';
 import CallDetail from './CallDetail.jsx';
 
 const ActivityFeed = ({ activeTab }) => {
@@ -33,7 +34,6 @@ const ActivityFeed = ({ activeTab }) => {
   const handleCallClick = (callId) => {
     setExpandedCallId(expandedCallId === callId ? null : callId);
   };
-
 
   // Format duration
   const formatDuration = (seconds) => {
@@ -87,7 +87,6 @@ const ActivityFeed = ({ activeTab }) => {
                 (call.call_type === 'missed' || call.call_type === 'voicemail');
             });
 
-            // Only render the date group if it has calls after filtering
             if (filteredGroup.length === 0) return null;
 
             return (
@@ -95,39 +94,13 @@ const ActivityFeed = ({ activeTab }) => {
                 <div className="date-header">{date}</div>
                 {filteredGroup.map((call) => (
                   <div key={call.id} className="call-container">
-                    <div 
-                      className={`call-item ${call.call_type}`}
+                    <CallItem 
+                      call={call}
+                      onArchiveToggle={handleArchiveToggle}
                       onClick={() => handleCallClick(call.id)}
-                    >
-                      <div className="call-direction">
-                        {call.direction === 'inbound' ? '←' : '→'}
-                      </div>
-                      <div className="call-info">
-                        <div className="call-primary">
-                          <span className="caller">{call.from}</span>
-                          <span className="call-type">{call.call_type}</span>
-                        </div>
-                        <div className="call-secondary">
-                          <span className="time">
-                            {new Date(call.created_at).toLocaleTimeString([], {
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </span>
-                          <span className="duration">
-                            Duration: {formatDuration(call.duration)}
-                          </span>
-                        </div>
-                      </div>
-                      <button 
-                        className="archive-button"
-                        onClick={(e) => handleArchiveToggle(call.id, e)}
-                      >
-                        {call.is_archived ? 'Unarchive' : 'Archive'}
-                      </button>
-                    </div>
+                    />
                     {expandedCallId === call.id && (
-                      <CallDetail call={call} />
+                      <CallDetail call={call} onArchiveToggle={handleArchiveToggle} />
                     )}
                   </div>
                 ))}
