@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useArchive } from '../../hooks/useArchive';
 import { useFetchCalls } from '../../hooks/useFetchCalls';
 import { useFilteredCalls } from '../../hooks/useFilteredCalls';
@@ -17,6 +17,11 @@ const ActivityFeed = ({ activeTab }) => {
   );
   const filteredCalls = useFilteredCalls(calls, activeTab);
 
+  // Reset expandedCallId when activeTab changes
+  useEffect(() => {
+    setExpandedCallId(null);
+  }, [activeTab]);
+
   // Archive single call
   const handleArchiveToggle = (callId, event) => {
     event.stopPropagation();
@@ -32,12 +37,6 @@ const ActivityFeed = ({ activeTab }) => {
   const handleUnarchiveAll = () => {
     unarchiveAll(filteredCalls);
   };
-
-  // Call detail
-  const handleCallClick = (callId) => {
-    setExpandedCallId(expandedCallId === callId ? null : callId);
-  };
-
 
   if (loading) return <div>Loading calls...</div>;
   if (error) {
@@ -93,15 +92,15 @@ const ActivityFeed = ({ activeTab }) => {
               <div key={date} className="date-group">
                 <div className="date-header">{date}</div>
                 {filteredGroup.map((call) => (
-                  <div key={call.id} className="call-container">
+                  <div key={`${call.id}-${date}`} className="call-container">
                     <CallItem 
                       call={call}
                       onArchiveToggle={handleArchiveToggle}
-                      onClick={() => handleCallClick(call.id)}
+                      onClick={() => setExpandedCallId(call.id)}
                       activeTab={activeTab}
                     />
                     {expandedCallId === call.id && (
-                      <CallDetail call={call} onArchiveToggle={handleArchiveToggle} />
+                      <CallDetail call={call} onArchiveToggle={handleArchiveToggle} activeTab={activeTab} />
                     )}
                   </div>
                 ))}
