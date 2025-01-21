@@ -11,7 +11,10 @@ const ActivityFeed = ({ activeTab }) => {
   const [expandedCallId, setExpandedCallId] = useState(null);
   const { calls, setCalls, loading, error, fetchCalls } = useFetchCalls();
   const { archiveCall, archiveAll, unarchiveAll } = useArchive(calls, setCalls);
-  const sortedCalls = useSortedCalls(calls);
+  const sortedCalls = useSortedCalls(activeTab === 'archived' ? 
+    calls.filter(call => call.is_archived) : 
+    calls
+  );
   const filteredCalls = useFilteredCalls(calls, activeTab);
 
   // Archive single call
@@ -35,12 +38,6 @@ const ActivityFeed = ({ activeTab }) => {
     setExpandedCallId(expandedCallId === callId ? null : callId);
   };
 
-  // Format duration
-  const formatDuration = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
 
   if (loading) return <div>Loading calls...</div>;
   if (error) {
@@ -81,10 +78,13 @@ const ActivityFeed = ({ activeTab }) => {
         ) : (
           Object.entries(sortedCalls).map(([date, dateGroup]) => {
             const filteredGroup = dateGroup.filter(call => {
-              if (activeTab === 'archived') return call.is_archived;
-              if (activeTab === 'all') return !call.is_archived;
-              return !call.is_archived && 
-                (call.call_type === 'missed' || call.call_type === 'voicemail');
+              if (activeTab === 'archived') {
+                return call.is_archived;
+              } else {
+                if (activeTab === 'all') return !call.is_archived;
+                return !call.is_archived && 
+                  (call.call_type === 'missed' || call.call_type === 'voicemail');
+              }
             });
 
             if (filteredGroup.length === 0) return null;
@@ -98,6 +98,7 @@ const ActivityFeed = ({ activeTab }) => {
                       call={call}
                       onArchiveToggle={handleArchiveToggle}
                       onClick={() => handleCallClick(call.id)}
+                      activeTab={activeTab}
                     />
                     {expandedCallId === call.id && (
                       <CallDetail call={call} onArchiveToggle={handleArchiveToggle} />

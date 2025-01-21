@@ -11,7 +11,7 @@ export const useSortedCalls = (calls) => {
     const processedIds = new Set();
 
     // Group calls by date first
-    const groupedByDate = sortedCalls.reduce((groups, call, index) => {
+    const groupedByDate = sortedCalls.reduce((groups, call) => {
       // Skip if we've already processed this call
       if (processedIds.has(call.id)) {
         return groups;
@@ -28,9 +28,16 @@ export const useSortedCalls = (calls) => {
         groups[dateKey] = [];
       }
 
-      // Find consecutive similar calls
+      // If the call is archived, treat it as an independent entry
+      if (call.is_archived) {
+        processedIds.add(call.id); // Mark as processed
+        groups[dateKey].push(call); // Add to the group as an independent entry
+        return groups;
+      }
+
+      // Find consecutive similar calls for non-archived calls
       const consecutiveCalls = [call];
-      let nextIndex = index + 1;
+      let nextIndex = sortedCalls.indexOf(call) + 1;
       
       while (nextIndex < sortedCalls.length) {
         const nextCall = sortedCalls[nextIndex];
