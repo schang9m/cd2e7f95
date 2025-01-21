@@ -70,24 +70,6 @@
   gap: 16px;
 }
 
-.archive-button {
-  padding: 4px 12px;
-  font-size: 0.9em;
-  background: none;
-  border: 1px solid #007bff;
-  color: #007bff;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-left: 16px;
-  white-space: nowrap;
-}
-
-.archive-button:hover {
-  background: #007bff;
-  color: white;
-}
-
 .archive-all-button,
 .unarchive-all-button {
   padding: 4px 12px;

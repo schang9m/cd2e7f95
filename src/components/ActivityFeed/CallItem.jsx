@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import incomingCall from '../../assets/incoming-call.png';
 import outgoingCall from '../../assets/outgoing-call.png';
 import missedCall from '../../assets/missed-call.png';
+import blockedCall from '../../assets/blocked-call.png';
+import '../../css/callitem.css';
 
 const formatDuration = (seconds) => {
   const minutes = Math.floor(seconds / 60);
@@ -17,6 +19,25 @@ const CallItem = ({ call, onArchiveToggle, onClick, activeTab }) => {
       !repeatedCall.is_archived
   ).length;
 
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(false);
+
+  const handleSettingsClick = (e) => {
+    e.stopPropagation();
+    setMenuVisible(!menuVisible);
+  };
+
+  const handleMenuOptionClick = (option, e) => {
+    setMenuVisible(false);
+    if (option === 'call') {
+      console.log('Call option selected');
+    } else if (option === 'block') {
+      setIsBlocked(true);
+    } else if (option === 'archive') {
+      onArchiveToggle(call.id, e);
+    }
+  };
+
   return (
     <div 
       className={`call-item ${call.call_type}`}
@@ -25,6 +46,7 @@ const CallItem = ({ call, onArchiveToggle, onClick, activeTab }) => {
       <div className="call-direction">
         <img 
           src={
+            isBlocked ? blockedCall :
             call.call_type === 'missed' 
               ? missedCall 
               : call.direction === 'inbound' 
@@ -58,14 +80,35 @@ const CallItem = ({ call, onArchiveToggle, onClick, activeTab }) => {
       </div>
       {onArchiveToggle && (
         <button 
-          className="archive-button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onArchiveToggle(call.id, e);
-          }}
+          className="settings-button"
+          onClick={handleSettingsClick}
         >
-          {call.is_archived ? 'Unarchive' : 'Archive'}
+          &#x22EE;
         </button>
+      )}
+      
+      {menuVisible && (
+        <div className={`popup-menu ${menuVisible ? 'show' : ''}`}>
+          <button 
+            className="menu-button call-button"
+            onClick={() => handleMenuOptionClick('call')}
+          >
+            Call
+          </button>
+          <button 
+            className="menu-button block-button"
+            onClick={() => handleMenuOptionClick('block')}
+          >
+            Block
+          </button>
+          <button 
+            className="menu-button archive-button"
+            onClick={(e) => {
+              handleMenuOptionClick('archive', e)}}
+          >
+            {call.is_archived ? 'Unarchive' : 'Archive'}
+          </button>
+        </div>
       )}
     </div>
   );
