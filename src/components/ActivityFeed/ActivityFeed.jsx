@@ -1,88 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useArchive } from '../../hooks/useArchive';
+import { useFetchCalls } from '../../hooks/useFetchCalls';
+import { useFilteredCalls } from '../../hooks/useFilteredCalls';
 import '../../css/activityfeed.css';
-
-const BASE_URL = 'https://aircall-api.onrender.com';
+import CallDetail from './CallDetail.jsx';
 
 const ActivityFeed = ({ activeTab }) => {
-  const [calls, setCalls] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [expandedCallId, setExpandedCallId] = useState(null);
+  const { calls, setCalls, loading, error, fetchCalls } = useFetchCalls();
+  const { archiveCall, archiveAll, unarchiveAll } = useArchive(calls, setCalls);
+  const filteredCalls = useFilteredCalls(calls, activeTab);
 
-  useEffect(() => {
-    fetchCalls();
-  }, []);
-
-  const fetchCalls = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await fetch(`${BASE_URL}/activities`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      
-      if (!Array.isArray(data)) {
-        throw new Error('Data is not an array');
-      }
-
-      setCalls(data);
-    } catch (error) {
-      console.error('Error fetching calls:', error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getFilteredCalls = () => {
-    switch (activeTab) {
-      case 'inbox':
-        return calls.filter(call => 
-          !call.is_archived && 
-          (call.call_type === 'missed' || call.call_type === 'voicemail')
-        );
-      case 'all':
-        return calls.filter(call => !call.is_archived);
-      case 'archived':
-        return calls.filter(call => call.is_archived);
-      default:
-        return [];
-    }
-  };
-
-  const handleArchiveToggle = async (callId, event) => {
+  // Archive call
+  const handleArchiveToggle = (callId, event) => {
     event.stopPropagation();
-    try {
-      await fetch(`${BASE_URL}/activities/${callId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ is_archived: !calls.find(call => call.id === callId).is_archived }),
-      });
-      setCalls(calls.map(call => 
-        call.id === callId 
-          ? { ...call, is_archived: !call.is_archived }
-          : call
-      ));
-    } catch (error) {
-      console.error('Error toggling archive status:', error);
-    }
+    archiveCall(callId);
   };
 
+  // Archive all calls
+  const handleArchiveAll = () => {
+    archiveAll(filteredCalls);
+  };
+
+  // Unarchive all calls
+  const handleUnarchiveAll = () => {
+    unarchiveAll(filteredCalls);
+  };
+
+  // Call detail
   const handleCallClick = (callId) => {
     setExpandedCallId(expandedCallId === callId ? null : callId);
   };
 
+  // Format date
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
   };
 
+  // Format duration
   const formatDuration = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -102,10 +57,24 @@ const ActivityFeed = ({ activeTab }) => {
     );
   }
 
-  const filteredCalls = getFilteredCalls();
-
   return (
     <div className="activity-feed">
+      {activeTab !== 'archived' && filteredCalls.length > 0 && (
+        <button 
+          className="archive-all-button"
+          onClick={handleArchiveAll}
+        >
+          Archive All
+        </button>
+      )}
+      {activeTab === 'archived' && filteredCalls.length > 0 && (
+        <button 
+          className="unarchive-all-button"
+          onClick={handleUnarchiveAll}
+        >
+          Unarchive All
+        </button>
+      )}
       <div className="calls-container">
         {filteredCalls.length === 0 ? (
           <div className="no-calls">
@@ -142,28 +111,7 @@ const ActivityFeed = ({ activeTab }) => {
                 </button>
               </div>
               {expandedCallId === call.id && (
-                <div className="call-details">
-                  <div className="detail-row">
-                    <span className="detail-label">To:</span>
-                    <span className="detail-value">{call.to}</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Via:</span>
-                    <span className="detail-value">{call.via}</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Direction:</span>
-                    <span className="detail-value">{call.direction}</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Call Type:</span>
-                    <span className="detail-value">{call.call_type}</span>
-                  </div>
-                  <div className="detail-row">
-                    <span className="detail-label">Duration:</span>
-                    <span className="detail-value">{formatDuration(call.duration)}</span>
-                  </div>
-                </div>
+                <CallDetail call={call} />
               )}
             </div>
           ))
