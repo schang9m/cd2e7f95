@@ -197,3 +197,18 @@
   align-items: center;
   justify-content: center;
 }
+
+.date-group {
+  margin-bottom: 24px;
+}
+
+.date-header {
+  padding: 8px 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #666;
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
