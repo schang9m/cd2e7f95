@@ -7,19 +7,23 @@
   top: 0;
   right: 0;
   bottom: 0;
+  min-height: 100vh;
 }
 
 #app .container {
   width: 376px;
   height: 666px;
+  margin: 0 auto;
   z-index: 100;
-
   background: white;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
   border-radius: 3px;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, .9);
 }
 
 #app .container-view {
   padding: 20px;
+  height: calc(666px - 120px); /* Subtract header height from container height */
+  overflow-y: auto;
 }
 
