@@ -3,7 +3,6 @@ import incomingCall from '../../assets/incoming-call.png';
 import outgoingCall from '../../assets/outgoing-call.png';
 import missedCall from '../../assets/missed-call.png';
 import blockedCall from '../../assets/blocked-call.png';
-import '../../css/callitem.css';
 import { Button, Modal, Stack, CloseButton } from 'react-bootstrap';
 
 const formatDuration = (seconds) => {
