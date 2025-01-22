@@ -6,7 +6,7 @@ import { useSortedCalls } from '../../hooks/useSortedCalls';
 import '../../css/activityfeed.css';
 import CallItem from './CallItem.jsx';
 import CallDetail from './CallDetail.jsx';
-import {Spinner, Button} from 'react-bootstrap';
+import { Spinner, Button } from 'react-bootstrap';
 
 const ActivityFeed = ({ activeTab }) => {
   const [expandedCallId, setExpandedCallId] = useState(null);
@@ -17,6 +17,7 @@ const ActivityFeed = ({ activeTab }) => {
     calls
   );
   const filteredCalls = useFilteredCalls(calls, activeTab);
+  const [showTopLink, setShowTopLink] = useState(false);
 
   // Reset expandedCallId when activeTab changes
   useEffect(() => {
@@ -39,6 +40,16 @@ const ActivityFeed = ({ activeTab }) => {
     unarchiveAll(filteredCalls);
   };
 
+  // Function to scroll to the top of the container
+  const scrollToTop = (e) => {
+    e.preventDefault(); // Prevent default anchor behavior
+    const container = document.querySelector('.container-view'); // Replace with your actual container class or ID
+    if (container) {
+      container.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll the container to the top
+    }
+  };
+
+
   if (loading) {
     return (
       <div>
@@ -59,25 +70,33 @@ const ActivityFeed = ({ activeTab }) => {
   }
 
   return (
-    <div className="activity-feed">
+    <div className="activity-feed" style={{ position: 'relative' }}>
       {activeTab !== 'archived' && filteredCalls.length > 0 && (
         <Button  
           variant="outline-primary"
           size="sm"
           onClick={handleArchiveAll}
         >
+          <span className="material-icons" style={{ verticalAlign: 'middle', marginRight: '4px' }}>
+            archive
+          </span>
           Archive All
         </Button>
       )}
+
       {activeTab === 'archived' && filteredCalls.length > 0 && (
-        <Button 
+        <Button  
           variant="outline-warning"
           size="sm"
           onClick={handleUnarchiveAll}
         >
-          Unarchive All
+          <span className="material-icons" style={{ verticalAlign: 'middle', marginRight: '4px' }}>
+            restore
+          </span>
+          Unarchive
         </Button>
       )}
+
       <div className="calls-container">
         {filteredCalls.length === 0 ? (
           <div className="no-calls">
@@ -121,6 +140,14 @@ const ActivityFeed = ({ activeTab }) => {
           })
         )}
       </div>
+
+      {/* Back to Top Link */}
+      {showTopLink && (
+        <a className="top-link" href="#" id="js-top" onClick={scrollToTop}>
+          <span className="material-icons">arrow_upward</span>
+          <span className="screen-reader-text">Back to top</span>
+        </a>
+      )}
     </div>
   );
 };

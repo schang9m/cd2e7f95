@@ -46,10 +46,10 @@ export const useSortedCalls = (calls) => {
         const sameDay = new Date(nextCall.created_at).toLocaleDateString() === date.toLocaleDateString();
         const sameNumber = nextCall.from === call.from;
         const sameDirection = nextCall.direction === call.direction;
-        const notVoicemail = nextCall.call_type !== 'voicemail' && call.call_type !== 'voicemail';
+        const notVoicemailOrMissed = nextCall.call_type !== 'voicemail' && nextCall.call_type !== 'missed';
         
         // Break if not consecutive similar call
-        if (!sameDay || !sameNumber || !sameDirection || !notVoicemail || processedIds.has(nextCall.id)) {
+        if (!sameDay || !sameNumber || !sameDirection || !notVoicemailOrMissed || processedIds.has(nextCall.id)) {
           break;
         }
         
