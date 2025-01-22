@@ -7,7 +7,6 @@ import '../../css/activityfeed.css';
 import CallItem from './CallItem.jsx';
 import CallDetail from './CallDetail.jsx';
 import { Spinner, Button } from 'react-bootstrap';
-import Bottom from '../Bottom/Bottom.jsx';
 
 const ActivityFeed = ({ activeTab, setInboxCallCount }) => {
   const [expandedCallId, setExpandedCallId] = useState(null);
@@ -51,8 +50,6 @@ const ActivityFeed = ({ activeTab, setInboxCallCount }) => {
   const handleUnarchiveAll = () => {
     unarchiveAll(filteredCalls);
   };
-
-
 
   if (loading) {
     return (
