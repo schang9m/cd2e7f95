@@ -61,20 +61,22 @@ const ActivityFeed = ({ activeTab }) => {
   return (
     <div className="activity-feed">
       {activeTab !== 'archived' && filteredCalls.length > 0 && (
-        <button 
-          className="archive-all-button"
+        <Button  
+          variant="outline-primary"
+          size="sm"
           onClick={handleArchiveAll}
         >
           Archive All
-        </button>
+        </Button>
       )}
       {activeTab === 'archived' && filteredCalls.length > 0 && (
-        <button 
-          className="unarchive-all-button"
+        <Button 
+          variant="outline-warning"
+          size="sm"
           onClick={handleUnarchiveAll}
         >
           Unarchive All
-        </button>
+        </Button>
       )}
       <div className="calls-container">
         {filteredCalls.length === 0 ? (

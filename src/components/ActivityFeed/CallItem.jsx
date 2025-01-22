@@ -101,7 +101,8 @@ const CallItem = ({ call, onArchiveToggle, onClick, activeTab }) => {
               >
                 Block
               </Button>
-              <Button variant="outline-primary"
+              <Button 
+                variant={call.is_archived ? "outline-warning" : "outline-primary"}
                 onClick={(e) => {
                   handleMenuOptionClick('archive', e)}}
               >
