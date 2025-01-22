@@ -1,8 +1,4 @@
 import React, { useState } from 'react';
-import incomingCall from '../../assets/incoming-call.png';
-import outgoingCall from '../../assets/outgoing-call.png';
-import missedCall from '../../assets/missed-call.png';
-import blockedCall from '../../assets/blocked-call.png';
 import { Button, Modal, Stack, CloseButton } from 'react-bootstrap';
 
 const formatDuration = (seconds) => {
@@ -36,24 +32,21 @@ const CallItem = ({ call, onArchiveToggle, onClick, activeTab }) => {
     }
   };
 
+  const iconClass = isBlocked ? 'icon-red' :
+    call.call_type === 'missed' ? 'icon-red' :
+    call.direction === 'inbound' || call.direction === 'outbound' ? 'icon-green' : '';
+
   return (
     <div 
       className={`call-item ${call.call_type}`}
       onClick={onClick}
     >
       <div className="call-direction">
-        <img 
-          src={
-            isBlocked ? blockedCall :
-            call.call_type === 'missed' 
-              ? missedCall 
-              : call.direction === 'inbound' 
-                ? incomingCall 
-                : outgoingCall
-          } 
-          alt={`${call.call_type} ${call.direction} call`}
-          className="phone-icon"
-        />
+      <span className={`material-icons phone-icon ${iconClass}`}>
+          {isBlocked ? 'block' :
+            call.call_type === 'missed' ? 'phone_missed' :
+            call.direction === 'inbound' ? 'call_received' : 'call_made'}
+        </span>
       </div>
       <div className="call-info">
         <div className="call-primary">

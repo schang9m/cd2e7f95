@@ -6,6 +6,18 @@
   margin-bottom: 8px;
 }
 
+.icon-red {
+  color: #dc3545;
+  margin-right: 10px;
+  /* Red color for missed calls */
+}
+
+.icon-green {
+  color: #28a745;
+  margin-right: 10px;
+  /* Green color for received and made calls */
+}
+
 .call-item {
   display: flex;
   align-items: center;
@@ -20,18 +32,6 @@
 .call-item:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
-}
-
-.call-direction {
-  margin-right: 16px;
-  display: flex;
-  align-items: center;
-}
-
-.phone-icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
 }
 
 .call-info {
@@ -183,7 +183,7 @@
 }
 
 .top-link {
-  position: fixed;
+  position: absolute;
   bottom: 20px;
   right: 20%;
 }
