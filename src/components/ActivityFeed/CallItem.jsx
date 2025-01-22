@@ -79,6 +79,7 @@ const CallItem = ({ call, onArchiveToggle, onClick, activeTab }) => {
       </div> 
 
         <Button 
+          variant="outline-secondary"
           className="settings-button"
           onClick={handleShow}
         >

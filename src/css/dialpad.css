@@ -1,0 +1,29 @@
+/* src/components/Bottom/DialPad.css */
+.call-button {
+  width: 60px;
+  /* Set the width */
+  height: 60px;
+  /* Set the height */
+  border-radius: 50%;
+  /* Make the button round */
+  padding: 0;
+  /* Remove default padding */
+  margin: 0 auto;
+  /* Center the button */
+}
+
+.dial-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+
+}
+
+.dial-pad-button {
+  width: 60px;
+  /* Set the width */
+  height: 60px;
+  /* Set the height */
+  border-radius: 50%;
+  margin: 0 auto;
+}

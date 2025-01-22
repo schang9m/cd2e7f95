@@ -23,8 +23,9 @@
 
 #app .container-view {
   padding: 20px;
-  height: calc(666px - 120px);
-  /* Subtract header height from container height */
+  height: calc(666px - 120px - 20px);
+  /* Subtract header and bottom height from container height */
   overflow-y: auto;
   position: relative;
+  scroll-behavior: smooth;
 }

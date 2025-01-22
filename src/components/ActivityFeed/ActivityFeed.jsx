@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useArchive } from '../../hooks/useArchive';
 import { useFetchCalls } from '../../hooks/useFetchCalls';
 import { useFilteredCalls } from '../../hooks/useFilteredCalls';
@@ -7,8 +7,9 @@ import '../../css/activityfeed.css';
 import CallItem from './CallItem.jsx';
 import CallDetail from './CallDetail.jsx';
 import { Spinner, Button } from 'react-bootstrap';
+import Bottom from '../Bottom/Bottom.jsx';
 
-const ActivityFeed = ({ activeTab }) => {
+const ActivityFeed = ({ activeTab, setInboxCallCount }) => {
   const [expandedCallId, setExpandedCallId] = useState(null);
   const { calls, setCalls, loading, error, fetchCalls } = useFetchCalls();
   const { archiveCall, archiveAll, unarchiveAll } = useArchive(calls, setCalls);
@@ -17,56 +18,13 @@ const ActivityFeed = ({ activeTab }) => {
     calls
   );
   const filteredCalls = useFilteredCalls(calls, activeTab);
-  const [showTopLink, setShowTopLink] = useState(false);
-  const containerRef = useRef(null);
-  //check if container is scrolled away from the top
-
-  const handleScroll = () => {
-    clearTimeout(scrollTimeout);
-    const container = containerRef.current;
-    scrollTimeout = setTimeout(() => {
-      if (container.scrollTop > 0) {
-        setShowTopLink(true);
-      } else {
-        setShowTopLink(false);
-      }
-    }, 200); // Adjust the timeout as needed
-  };
 
   const handleExpand = (callId) => {
     setExpandedCallId(prevId => prevId === callId ? null : callId);
   };
-
-   useEffect(() => {
-    // Make sure that the element exists before setting up the IntersectionObserver
-    const container = document.querySelector('.container-view');
-
-    if (container) {
-      // Create the IntersectionObserver
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          // Check if the top of the container is scrolled
-          if (entry.boundingClientRect.top < 0) {
-            setShowTopLink(true); // Show "Back to top" link if scrolled
-          } else {
-            setShowTopLink(false); // Hide the link when at the top
-          }
-        },
-        {
-          root: null, // Observe relative to the viewport
-          threshold: 0, // Trigger when any part of the element is visible
-        }
-      );
-
-      // Observe the container element
-      observer.observe(container);
-
-      // Cleanup the observer when the component unmounts
-      return () => {
-        observer.disconnect();
-      };
-    }
-  }, []);
+  
+  // Count inbox calls
+  const inboxCallCount = calls.filter(call => !call.is_archived && (call.call_type === 'missed' || call.call_type === 'voicemail')).length;
 
   // Reset expandedCallId when activeTab changes
   useEffect(() => {
@@ -98,6 +56,10 @@ const ActivityFeed = ({ activeTab }) => {
     }
   };
 
+  useEffect(() => {
+    const inboxCount = calls.filter(call => !call.is_archived && (call.call_type === 'missed' || call.call_type === 'voicemail')).length;
+    setInboxCallCount(inboxCount); // Update the inbox call count in App
+  }, [calls, setInboxCallCount]); // Add calls as a dependency
 
   if (loading) {
     return (
@@ -119,9 +81,7 @@ const ActivityFeed = ({ activeTab }) => {
   }
 
   return (
-    <div ref={containerRef} 
-    className="activity-feed" style={{ position: 'relative' }}
-    onScroll={handleScroll}>
+    <div className="activity-feed" style={{ position: 'relative' }}>
       {activeTab !== 'archived' && filteredCalls.length > 0 && (
         <Button  
           variant="outline-primary"
@@ -191,14 +151,11 @@ const ActivityFeed = ({ activeTab }) => {
           })
         )}
       </div>
-
       {/* Back to Top Link */}
-      {showTopLink && (
         <a className="top-link" href="#" id="js-top" onClick={scrollToTop}>
           <span className="material-icons">arrow_upward</span>
           <span className="screen-reader-text">Back to top</span>
         </a>
-      )}
     </div>
   );
 };
