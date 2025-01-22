@@ -26,6 +26,11 @@ const ActivityFeed = ({ activeTab, setInboxCallCount }) => {
   // Count inbox calls
   const inboxCallCount = calls.filter(call => !call.is_archived && (call.call_type === 'missed' || call.call_type === 'voicemail')).length;
 
+  useEffect(() => {
+    const inboxCount = calls.filter(call => !call.is_archived && (call.call_type === 'missed' || call.call_type === 'voicemail')).length;
+    setInboxCallCount(inboxCount); // Update the inbox call count in App
+  }, [calls, setInboxCallCount]); // Add calls as a dependency
+
   // Reset expandedCallId when activeTab changes
   useEffect(() => {
     setExpandedCallId(null);
@@ -47,19 +52,7 @@ const ActivityFeed = ({ activeTab, setInboxCallCount }) => {
     unarchiveAll(filteredCalls);
   };
 
-  // Function to scroll to the top of the container
-  const scrollToTop = (e) => {
-    e.preventDefault(); // Prevent default anchor behavior
-    const container = document.querySelector('.container-view'); // Replace with your actual container class or ID
-    if (container) {
-      container.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll the container to the top
-    }
-  };
 
-  useEffect(() => {
-    const inboxCount = calls.filter(call => !call.is_archived && (call.call_type === 'missed' || call.call_type === 'voicemail')).length;
-    setInboxCallCount(inboxCount); // Update the inbox call count in App
-  }, [calls, setInboxCallCount]); // Add calls as a dependency
 
   if (loading) {
     return (
@@ -151,11 +144,6 @@ const ActivityFeed = ({ activeTab, setInboxCallCount }) => {
           })
         )}
       </div>
-      {/* Back to Top Link */}
-        <a className="top-link" href="#" id="js-top" onClick={scrollToTop}>
-          <span className="material-icons">arrow_upward</span>
-          <span className="screen-reader-text">Back to top</span>
-        </a>
     </div>
   );
 };

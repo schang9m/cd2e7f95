@@ -181,3 +181,9 @@
 .repeated-call-item:last-child {
   border-bottom: none;
 }
+
+.top-link {
+  position: fixed;
+  bottom: 20px;
+  right: 20%;
+}
