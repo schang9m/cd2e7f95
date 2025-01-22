@@ -6,6 +6,7 @@ import { useSortedCalls } from '../../hooks/useSortedCalls';
 import '../../css/activityfeed.css';
 import CallItem from './CallItem.jsx';
 import CallDetail from './CallDetail.jsx';
+import {Spinner, Button} from 'react-bootstrap';
 
 const ActivityFeed = ({ activeTab }) => {
   const [expandedCallId, setExpandedCallId] = useState(null);
@@ -38,7 +39,16 @@ const ActivityFeed = ({ activeTab }) => {
     unarchiveAll(filteredCalls);
   };
 
-  if (loading) return <div>Loading calls...</div>;
+  if (loading) {
+    return (
+      <div>
+        <Spinner animation="border" variant="success" 
+        className="position-absolute top-50 start-50"
+        />
+      </div>
+    );
+  }  
+  
   if (error) {
     return (
       <div className="error-message">
@@ -69,10 +79,10 @@ const ActivityFeed = ({ activeTab }) => {
       <div className="calls-container">
         {filteredCalls.length === 0 ? (
           <div className="no-calls">
-            No {activeTab} calls
-            <button onClick={fetchCalls} className="refresh-button">
+            No {activeTab} calls 
+            <Button variant="primary" size="sm" className="ms-2" onClick={fetchCalls}>
               Refresh
-            </button>
+            </Button>
           </div>
         ) : (
           Object.entries(sortedCalls).map(([date, dateGroup]) => {

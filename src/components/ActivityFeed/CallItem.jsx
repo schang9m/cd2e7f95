@@ -4,6 +4,7 @@ import outgoingCall from '../../assets/outgoing-call.png';
 import missedCall from '../../assets/missed-call.png';
 import blockedCall from '../../assets/blocked-call.png';
 import '../../css/callitem.css';
+import { Button, Modal, Stack, CloseButton } from 'react-bootstrap';
 
 const formatDuration = (seconds) => {
   const minutes = Math.floor(seconds / 60);
@@ -19,16 +20,14 @@ const CallItem = ({ call, onArchiveToggle, onClick, activeTab }) => {
       !repeatedCall.is_archived
   ).length;
 
-  const [menuVisible, setMenuVisible] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
+
   const [isBlocked, setIsBlocked] = useState(false);
 
-  const handleSettingsClick = (e) => {
-    e.stopPropagation();
-    setMenuVisible(!menuVisible);
-  };
-
   const handleMenuOptionClick = (option, e) => {
-    setMenuVisible(false);
+    setShowModal(false);
     if (option === 'call') {
       console.log('Call option selected');
     } else if (option === 'block') {
@@ -77,39 +76,40 @@ const CallItem = ({ call, onArchiveToggle, onClick, activeTab }) => {
             Duration: {formatDuration(call.duration)}
           </span>
         </div>
-      </div>
-      {onArchiveToggle && (
-        <button 
+      </div> 
+
+        <Button 
           className="settings-button"
-          onClick={handleSettingsClick}
+          onClick={handleShow}
         >
           &#x22EE;
-        </button>
-      )}
-      
-      {menuVisible && (
-        <div className={`popup-menu ${menuVisible ? 'show' : ''}`}>
-          <button 
-            className="menu-button call-button"
-            onClick={() => handleMenuOptionClick('call')}
-          >
-            Call
-          </button>
-          <button 
-            className="menu-button block-button"
-            onClick={() => handleMenuOptionClick('block')}
-          >
-            Block
-          </button>
-          <button 
-            className="menu-button archive-button"
-            onClick={(e) => {
-              handleMenuOptionClick('archive', e)}}
-          >
-            {call.is_archived ? 'Unarchive' : 'Archive'}
-          </button>
-        </div>
-      )}
+        </Button>
+
+        <Modal show={showModal} onHide={handleClose} centered className="modal-sm">
+          <Modal.Header closeButton>
+            <Modal.Title>Call Options</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Stack gap={3}>
+              <Button variant="outline-success"
+                onClick={() => handleMenuOptionClick('call')}
+                >
+                Call
+              </Button>
+              <Button variant="outline-danger"
+                onClick={() => handleMenuOptionClick('block')}
+              >
+                Block
+              </Button>
+              <Button variant="outline-primary"
+                onClick={(e) => {
+                  handleMenuOptionClick('archive', e)}}
+              >
+                {call.is_archived ? 'Unarchive' : 'Archive'}
+              </Button>
+            </Stack>
+          </Modal.Body>
+      </Modal>
     </div>
   );
 };

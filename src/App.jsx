@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header.jsx';
 import ActivityFeed from './components/ActivityFeed/ActivityFeed.jsx';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('inbox');
