@@ -1,7 +1,7 @@
 header {
   background: white;
   padding: 15px 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -23,39 +23,3 @@ svg {
   height: auto;
   margin-bottom: 0;
 }
-
-.tabs {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-
-.tab, .tab-icon {
-  padding: 8px 16px;
-  border: none;
-  background: none;
-  font-size: 14px;
-  color: #666;
-  cursor: pointer;
-  border-radius: 20px;
-  transition: all 0.2s ease;
-}
-
-.tab.active, .tab-icon.active {
-  background-color: #f0f0f0;
-  color: #000;
-  font-weight: 500;
-}
-
-.tab:hover, .tab-icon:hover {
-  background-color: #f8f8f8;
-}
-
-.tab-icon {
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-

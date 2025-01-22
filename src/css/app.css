@@ -16,14 +16,15 @@
   margin: 0 auto;
   z-index: 100;
   background: white;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   border-radius: 3px;
 }
 
 #app .container-view {
   padding: 20px;
-  height: calc(666px - 120px); /* Subtract header height from container height */
+  height: calc(666px - 120px);
+  /* Subtract header height from container height */
   overflow-y: auto;
+  position: relative;
 }
-

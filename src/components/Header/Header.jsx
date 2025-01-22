@@ -1,10 +1,11 @@
 import React from 'react';
+import { Button, Stack } from 'react-bootstrap';
 
 const Header = ({ activeTab, setActiveTab }) => {
   return (
     <header>
-      <div className="header-content">
-        <svg width='486px' height='168px' viewBox='0 0 486 168' version='1.1' xmlns='http://www.w3.org/2000/svg'>
+      <Stack direction="horizontal" gap={2}>
+        <svg className="logo p-1" width='486px' height='168px' viewBox='0 0 486 168' version='1.1' xmlns='http://www.w3.org/2000/svg'>
           <g stroke='none' strokeWidth='1' fill='none' fillRule='evenodd'>
             <g transform='translate(207.000000, 24.000000)'>
                 <rect fill='#424242' x='270' y='6' width='9' height='90' rx='4.5'/>
@@ -20,27 +21,40 @@ const Header = ({ activeTab, setActiveTab }) => {
           </g>
         </svg>
 
-        <div className="tabs">
-          <button 
-            className={`tab ${activeTab === 'inbox' ? 'active' : ''}`}
+          <Button 
+            variant="outline-success"
+            size="sm"
+            className={`tab ${activeTab === 'inbox' ? 'active' : ''} p-2`}
             onClick={() => setActiveTab('inbox')}
           >
+            <span className="material-icons" style={{ verticalAlign: 'middle', marginRight: '4px' }}>
+              inbox
+            </span>
             Inbox
-          </button>
-          <button 
-            className={`tab ${activeTab === 'all' ? 'active' : ''}`}
+          </Button>
+          <Button 
+            variant="outline-success"
+            size="sm"
+            className={`tab ${activeTab === 'all' ? 'active' : ''} p-2`}
             onClick={() => setActiveTab('all')}
           >
-            All Calls
-          </button>
-          <button 
-            className={`tab-icon ${activeTab === 'archived' ? 'active' : ''}`}
+            <span className="material-icons" style={{ verticalAlign: 'middle', marginRight: '4px' }}>
+              call
+            </span>
+            Calls
+          </Button>
+          <Button 
+            variant="outline-success"
+            size="sm"
+            className={`tab-icon ${activeTab === 'archived' ? 'active' : ''} p-1 pt-2 pb-2`}
             onClick={() => setActiveTab('archived')}
           >
-            [A]
-          </button>
-        </div>
-      </div>
+            <span className="material-icons" style={{ verticalAlign: 'middle', marginRight: '4px' }}>
+              archive
+            </span>
+            Archive
+          </Button>
+      </Stack>
     </header>
   );
 };

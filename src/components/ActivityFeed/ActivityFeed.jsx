@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useArchive } from '../../hooks/useArchive';
 import { useFetchCalls } from '../../hooks/useFetchCalls';
 import { useFilteredCalls } from '../../hooks/useFilteredCalls';
@@ -18,6 +18,55 @@ const ActivityFeed = ({ activeTab }) => {
   );
   const filteredCalls = useFilteredCalls(calls, activeTab);
   const [showTopLink, setShowTopLink] = useState(false);
+  const containerRef = useRef(null);
+  //check if container is scrolled away from the top
+
+  const handleScroll = () => {
+    clearTimeout(scrollTimeout);
+    const container = containerRef.current;
+    scrollTimeout = setTimeout(() => {
+      if (container.scrollTop > 0) {
+        setShowTopLink(true);
+      } else {
+        setShowTopLink(false);
+      }
+    }, 200); // Adjust the timeout as needed
+  };
+
+  const handleExpand = (callId) => {
+    setExpandedCallId(prevId => prevId === callId ? null : callId);
+  };
+
+   useEffect(() => {
+    // Make sure that the element exists before setting up the IntersectionObserver
+    const container = document.querySelector('.container-view');
+
+    if (container) {
+      // Create the IntersectionObserver
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          // Check if the top of the container is scrolled
+          if (entry.boundingClientRect.top < 0) {
+            setShowTopLink(true); // Show "Back to top" link if scrolled
+          } else {
+            setShowTopLink(false); // Hide the link when at the top
+          }
+        },
+        {
+          root: null, // Observe relative to the viewport
+          threshold: 0, // Trigger when any part of the element is visible
+        }
+      );
+
+      // Observe the container element
+      observer.observe(container);
+
+      // Cleanup the observer when the component unmounts
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, []);
 
   // Reset expandedCallId when activeTab changes
   useEffect(() => {
@@ -70,7 +119,9 @@ const ActivityFeed = ({ activeTab }) => {
   }
 
   return (
-    <div className="activity-feed" style={{ position: 'relative' }}>
+    <div ref={containerRef} 
+    className="activity-feed" style={{ position: 'relative' }}
+    onScroll={handleScroll}>
       {activeTab !== 'archived' && filteredCalls.length > 0 && (
         <Button  
           variant="outline-primary"
@@ -127,7 +178,7 @@ const ActivityFeed = ({ activeTab }) => {
                     <CallItem 
                       call={call}
                       onArchiveToggle={handleArchiveToggle}
-                      onClick={() => setExpandedCallId(call.id)}
+                      onClick={() => handleExpand(call.id)} // Toggle expand/collapse on click
                       activeTab={activeTab}
                     />
                     {expandedCallId === call.id && (
